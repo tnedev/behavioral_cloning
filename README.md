@@ -48,6 +48,34 @@ I used my Azure GPU VM with 12 CPU cores and 2xTesla K80 GPUs. With it training 
 2 hours. Most of this time comes from using generators instead of in memory loading all the data.
 After a few iterations and improvements and training cycles of the model I was able to successfully make it through the first track.
 
+The final model all together uses 16 layers including the VGG ones.
+On top of the VGG model we have 4 1D convolution layers with RELU activation.
+They all use filter size of 3 pixels, keep the size of the layer the same and
+the numbers of filters doubles with each layer starting from 32.
+The model is then flattened fallowed by 3 fully connected layer with RELU activation (size of 1024, 512, 128). A dropout of 50% is added
+between the first fully connected layer and the rest. This reduces the risk of overfitting.
+The final layer is a single fully-connected layer wit tanh activation for smooth -1, +1 angles.
+
+The final model looks like this:
+[logo]: ./img/model.png
+
+The reason behind using the VGG model underneath is that the VGG is very capable of recognizing images. Therefore, with
+our driving the model quickly gets that is should stay between the lines. If we did not provide the VGG, during the training
+our model should learn the concepts of figures and recognize them. By using the VGG as base, we skip this step.
+
+The architecture on top of the VGG model is based on experimentation and inspired by NVIDIA's steering model. The convolution layers were chosen because of their 
+capability in image recognition. 
+
+The model was trained in 2x3 epoch with Adam optimizer and Mean Squared Error, however the second round of training did not lower the MSE error and the driving.
+A 10% validation set was used to limit a potential overfitting. Changing the learning rate of 0.0001 did not seem to have affect on the results.
+Using a test set data did not seem to provide useful results.
+
+Normally, when you play such a driving game, you remember how to play, but you also learn the track which makes it a lot easier.
+Our model has no idea of which comes after which. Even further, during each epoch of training, image order is randomized.
+However, this keeps me asking if a recurrent model which has the concept of memory will perform better in the game.
+This idea might be unsuitable for real life steering angle model, but for going around a track makes sense.
+Looking forward to do the experiment. 
+
 Funny enough, this model drives very well, but it is unable to run on my laptop in real time due to its complexity.
 To be able to test I run the simulator on my laptop while the model runs on the Azure VM, connecting them though a SSH tunneling.
 However, even that my network connection is good there is a significant lag maybe because of the nature of the ssh connection
