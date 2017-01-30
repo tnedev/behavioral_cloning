@@ -91,4 +91,7 @@ The task is hard. I could spend further weeks of experimenting in order to come 
 I am happy with the results and I will stop here with the simulator, however, I will continue with real life data.
 I will first use the data provided by Comma.ai and then try collecting my own data by producing a simple device to do so.
 
+A short clip of driving around the first track:
+https://www.youtube.com/watch?v=SgWkwiXhsxA
+
 Fun times ahead!
